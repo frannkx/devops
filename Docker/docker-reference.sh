@@ -4,7 +4,7 @@
 docker search [nombre]
 
 # Descargar imagen 
-docekr pull [nombre:version]
+docker pull [nombre:version]
 
 # Listando Imagenes
 docker images
@@ -52,6 +52,13 @@ docker run -d -p 33060:3306 --name mysql-db3 -e MYSQL_ROOT_PASSWORD=DbR00t --mou
 # referencia 2 https://clouding.io/hc/es/articles/360010283060-Trabajando-con-im%C3%A1genes-en-Docker   
 
 
+
+## Ambiente Wordpress en docker
+
+docker pull mysql
+docker pull wordpress:5.6.1-php7.4-apache
+docker run --name servidor_mysql -e MYSQL_ROOT_PASSWORD=asdasd -d mysql
+docker run --name servidor_wp -p 80:80 --link servidor_mysql:mysql -d wordpress
 
 
 
