@@ -50,7 +50,7 @@ docker run -d -p 33060:3306 --name mysql-db3 -e MYSQL_ROOT_PASSWORD=DbR00t --mou
 
 #referencia https://platzi.com/tutoriales/1432-docker/3268-como-crear-un-contenedor-con-docker-mysql-y-persistir-la-informacion/
 # referencia 2 https://clouding.io/hc/es/articles/360010283060-Trabajando-con-im%C3%A1genes-en-Docker   
-
+# referencia 3 https://www.josedomingo.org/pledin/2016/02/enlazando-contenedores-docker/
 
 
 ## Ambiente Wordpress en docker
