@@ -30,23 +30,37 @@ docker commit [ID container] [nombre]
 # Eliminar Imagen
 docker image rm [nombre]
 
+#publicar imagen en docker hub
+docker tag local-image:tagname new-repo:tagname
+
+docker login -u 19583698
+docker tag getting-started 19583698/getting-started
+docker push 19583698/getting-started
+
+
+
+docker push new-repo:tagname
+
 # Detener contenedor
 docker stop [nombre]
+
+# Encender contenedor apagado
+docker start [nombre]
 
 # Eliminar contenedor
 docker rm -f [nombre]
 
-# Eliminar volumenes temporales creados por docker
-docker volume prune
-
 # Crear un volumen 
 docker volume create [nombre-volumen]
 
-# Listar volumenes creados
-docker volume ls
-
 # Levantar contenedor mysql con persistencia de datos 
 docker run -d -p 33060:3306 --name mysql-db3 -e MYSQL_ROOT_PASSWORD=DbR00t --mount src=db-volume,dst=/var/lib/mysql mysql
+
+# Eliminar volumenes temporales creados por docker
+docker volume prune
+
+# Listar volumenes creados
+docker volume ls
 
 #referencia https://platzi.com/tutoriales/1432-docker/3268-como-crear-un-contenedor-con-docker-mysql-y-persistir-la-informacion/
 # referencia 2 https://clouding.io/hc/es/articles/360010283060-Trabajando-con-im%C3%A1genes-en-Docker   
@@ -55,13 +69,11 @@ docker run -d -p 33060:3306 --name mysql-db3 -e MYSQL_ROOT_PASSWORD=DbR00t --mou
 
 ## Ambiente Wordpress en docker
 
-docker pull mysql
-docker pull wordpress:5.6.1-php7.4-apache
-docker run --name servidor_mysql -e MYSQL_ROOT_PASSWORD=asdasd -d mysql
-docker run --name servidor_wp -p 80:80 --link servidor_mysql:mysql -d wordpress
+#docker pull mysql
+docker pull mysql:8.0.23
 
+#docker pull wordpress:5.6.1-php7.4-apache
+sudo docker pull wordpress:5.6-php8.0-apache
 
-
-
-
-
+#docker run --name servidor_mysql -e MYSQL_ROOT_PASSWORD=asdasd -d mysql
+docker run --name servidor_wp -p 80:80 --link servidor_mysql:mysql -e MYSQL_ROOT_PASSWORD=p4ssw0rd -d wordpress
