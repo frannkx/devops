@@ -15,6 +15,13 @@ docker run -t -i ubuntu /bin/bash
 # Correr contenedor mysql de manera desatachada
 docker run -d -p 3306:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=DbR00t mysql
 
+#Correr contenedor con bind de un working directory
+docker run -dp 3000:3000 \
+    -w /app -v ${PWD}:/app \
+    node:12-alpine \
+    sh -c "yarn install && yarn run dev"
+
+
 # Entrar a contenedor corriendo de manera desatachada
 docker exec -it mysql-db /bin/bash
 
@@ -23,6 +30,9 @@ docker exec -it mysql-db mysql -p
 
 # Buscar id de contenedor
 docker ps -a
+
+# Ver logs de un contenedor
+docker logs -f [container-id]
 
 # Crear nueva imagen de docker
 docker commit [ID container] [nombre]
@@ -77,3 +87,82 @@ sudo docker pull wordpress:5.6-php8.0-apache
 
 #docker run --name servidor_mysql -e MYSQL_ROOT_PASSWORD=asdasd -d mysql
 docker run --name servidor_wp -p 80:80 --link servidor_mysql:mysql -e MYSQL_ROOT_PASSWORD=p4ssw0rd -d wordpress
+
+#Crear red
+docker network create todo-app
+
+#Start a MySQL container and attach it the network
+docker run -d \
+    --network todo-app --network-alias mysql \
+    -v todo-mysql-data:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=secret \
+    -e MYSQL_DATABASE=todos \
+    mysql:5.7
+
+# Iniciar un contenedor estableciendo variables de entorno
+docker run -dp 3000:3000 \
+  -w /app -v ${PWD}:/app \
+  --network todo-app \
+  -e MYSQL_HOST=mysql \
+  -e MYSQL_USER=root \
+  -e MYSQL_PASSWORD=secret \
+  -e MYSQL_DB=todos \
+  node:12-alpine \
+  sh -c "yarn install && yarn run dev"
+
+#Instalar docker compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+#Comprobar version de docker compose
+docker-compose --version
+
+# Creacion de archivo para docker compose
+touch docker-compose.yml
+#_____ Ejemplo________
+#version: "3.7"
+#
+#services:
+#  app:
+#    image: node:12-alpine
+#    command: sh -c "yarn install && yarn run dev"
+#    ports:
+#      - 3000:3000
+#    working_dir: /app
+#    volumes:
+#      - ./:/app
+#    environment:
+#      MYSQL_HOST: mysql
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: secret
+#      MYSQL_DB: todos
+#
+#  mysql:
+#    image: mysql:5.7
+#    volumes:
+#      - todo-mysql-data:/var/lib/mysql
+#    environment: 
+#      MYSQL_ROOT_PASSWORD: secret
+#      MYSQL_DATABASE: todos
+#
+#volumes:
+#  todo-mysql-data:
+#
+#_____________________
+
+#Start up the application stack
+docker-compose up -d
+
+#View the logs of the stack creation
+docker-compose logs -f app
+
+#Remove the stack
+docker-compose down
+
+#Remove the stack whit volumes
+docker-compose down --volumes
+
+#view the layers of image creation
+docker image history getting-started:latest
+
+#view the layers of image creation not truncated
+docker image history --no-trunc getting-started

@@ -29,7 +29,6 @@ vagrant share
 vagrant suspend
 
 
-
 #referencia 1 https://app.vagrantup.com/boxes/search
 
 
