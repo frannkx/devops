@@ -89,3 +89,88 @@ kubectl delete deployment hello-node
 minikube stop
 minikube delete
 
+
+#Troubleshooting with kubectl
+kubectl get - list resources
+kubectl describe - show detailed information about a resource
+kubectl logs - print the logs from a container in a pod
+kubectl exec - execute a command on a container in a pod
+
+#Look for existing Pods
+kubectl get pods
+
+#view what containers are inside that Pod 
+kubectl describe pods
+
+ Click on the command below to automatically open a new terminal and run the proxy
+echo -e "\n\n\n\e[92mStarting Proxy. After starting it will not output a response. Please click the first Terminal Tab\n"; kubectl proxy
+
+
+export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+echo Name of the Pod: $POD_NAME
+
+curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
+
+#View the container logs
+kubectl logs $POD_NAME
+
+#Executing command on the container 
+kubectl exec $POD_NAME env
+
+#start a bash session in the Pod’s container
+kubectl exec -ti $POD_NAME bash
+
+view
+cat server.js
+
+curl localhost:8080
+
+#Expose your app
+kubectl get pods
+
+kubectl get services
+
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+
+kubectl get services
+
+kubectl describe services/kubernetes-bootcamp
+
+export NODE_PORT=$(kubectl get services/kubernetes-bootcamp -o go-template='{{(index .spec.ports 0).nodePort}}')
+echo NODE_PORT=$NODE_PORT
+
+curl $(minikube ip):$NODE_PORT
+
+#Using labels
+kubectl describe deployment
+
+kubectl get pods -l run=kubernetes-bootcamp
+
+kubectl get services -l run=kubernetes-bootcamp
+
+export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+echo Name of the Pod: $POD_NAME
+
+#To apply a new label we use the label command followed by the object type, object name and the new label
+kubectl label pod $POD_NAME app=v1
+
+#check it with the describe pod command
+kubectl describe pods $POD_NAME
+
+#we can query now the list of pods using the new label
+kubectl get pods -l app=v1
+
+##Deleting a service
+
+
+kubectl delete service -l run=kubernetes-bootcamp
+
+#Confirm that the service is gone:
+kubectl get services
+
+#confirms that our Service was removed
+curl $(minikube ip):$NODE_PORT
+
+#This proves that the app is not reachable anymore from outside of the cluster. You can confirm that the app is still running with a curl inside the pod:
+kubectl exec -ti $POD_NAME curl localhost:8080
+
