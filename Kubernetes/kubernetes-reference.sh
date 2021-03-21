@@ -31,7 +31,7 @@ minikube dashboard --url
 ##Using kubectl to create a Deployment
 
 #reate a Deployment that manages a Pod. The Pod runs a Container based on the provided Docker image.
-kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+#kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
 kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
 
 #View the deployment
@@ -173,4 +173,39 @@ curl $(minikube ip):$NODE_PORT
 
 #This proves that the app is not reachable anymore from outside of the cluster. You can confirm that the app is still running with a curl inside the pod:
 kubectl exec -ti $POD_NAME curl localhost:8080
+
+###################################### Kubectl ########################################################
+
+#Creating a Cluster
+
+#Deploy an app
+kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
+kubectl get services
+
+##Exploring Your App
+kubectl get pods
+kubectl describe pods
+
+echo -e "\n\n\n\e[92mStarting Proxy. After starting it will not output a response. Please click the first Terminal Tab\n"; kubectl proxy
+export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+echo Name of the Pod: $POD_NAME
+curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
+
+kubectl logs $POD_NAME
+
+#Executing command on the container
+kubectl exec $POD_NAME env
+kubectl exec -ti $POD_NAME bash
+
+##Using a Service to Expose Your App
+#ClusterIP (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
+#NodePort - Exposes the Service on the same port of each selected Node in the cluster using NAT. Makes a Service accessible from outside the cluster using <NodeIP>:<NodePort>. Superset of ClusterIP.
+#LoadBalancer - Creates an external load balancer in the current cloud (if supported) and assigns a fixed, external IP to the Service. Superset of NodePort.
+#ExternalName - Exposes the Service using an arbitrary name (specified by externalName in the spec) by returning a CNAME record with the name. No proxy is used. This type requires v1.7 or higher of kube-dns.
+kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+
+export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+echo Name of the Pod: $POD_NAME
+kubectl label pod $POD_NAME app=v1
+
 
