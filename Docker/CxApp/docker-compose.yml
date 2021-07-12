@@ -25,3 +25,32 @@ services:
 
 volumes:
   todo-mysql-data:
+
+
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todos
+
+  app:
+    image: php:7.2-apache
+    command: sh -c ""
+    ports:
+      - 8000:8000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: todos
+
+volumes:
+  todo-mysql-data:
