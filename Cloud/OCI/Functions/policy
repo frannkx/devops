@@ -1,0 +1,11 @@
+#IAM Policies to work with Functions
+
+Allow service FaaS to read repos in tenancy
+Allow service FaaS to use virtual-network-family in compartment <comp-name>
+
+#If one or more Oracle Functions users is not tenancy administrator, add the following policy statements to the new policy:
+
+Allow group <group-name> to manage repos in tenancy
+Allow group <group-name> to use virtual-network-family in compartment <comp-name>
+Allow group <group-name> to manage functions-family in compartment <compartment-name>
+Allow group <group-name< to read metrics in compartment <compartment-name>

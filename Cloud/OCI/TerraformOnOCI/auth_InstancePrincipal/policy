@@ -1,0 +1,5 @@
+#Dynamic group matching rule
+ANY {instance.id = '<instance-ocid>'}
+
+#Policy
+allow dynamic-group Terrafom-DG to manage all-resources in tenancy
