@@ -6,3 +6,117 @@ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 
 sudo apt-get update && sudo apt-get install terraform
+
+
+#Initializae the directory
+terraform init
+
+#Format and validate the configuration
+terraform fmt
+terraform validate
+
+#Test de infrastructure to Create
+terraform plan
+
+#Create Infrastructure
+terraform apply
+
+#Inspect state
+terraform show
+
+#Manually managing state
+terraform state list
+
+#Query outputs on screen
+terraform output
+
+
+#Provider file to OCI
+provider "oci"{
+    version             = ">=3.0.0"
+    tenancy_ocid        = "${var.tenancy_ocid}"
+    user_ocid           = "${var.user_ocid}"
+    fingerprint         = "${var.fingerprint}"
+    private_key_path    = "${var.private_key_path}"
+    region              = "${var.region}"
+}
+
+terraform{
+    backend "http" {
+        update_method   = "PUT"
+        address         = "<bucket-address>"
+    }
+}
+
+
+##Terraform Provisioners remote and local on OCI
+
+#remote
+provisioner "remote-exec" {
+    inline = [
+        "echo 'this instance was provisioned by terraform.' | sudo tee /etc/motd", 
+    ]
+}
+
+#local
+provisioner "local-exec" {
+    command = "echo ${oci_core_instance.web.private_ip} >> private_ips.txt"
+}
+
+#null resource remote
+resource "null_resource" "remote-excec"{
+    depends_on = ["oci_core_instance.TFInstance"]
+
+    provisioner "remote-exec"{
+        connection{
+            agent       = false
+            timeout     = "10m"
+            host        = "${data.oci_core_vnic.InstanceVnic.public_ip_address}"
+            user        = "opc"
+            private_key = "${var.ssh_private_key}"
+        }
+
+        inline =[
+            "touch ~/IMadeAFile.Right.Here",
+        ]
+    }
+}
+
+#provisioner with instance principal authorization
+provider "oci"{
+    auth = "InstancePrincipal"
+    region = "${var.region}"
+}
+
+
+##References
+
+#Hashicorp Terraform OCI
+https://learn.hashicorp.com/tutorials/terraform/oci-build?in=terraform/oci-get-started
+
+#Terraform Cloud
+https://www.terraform.io/cloud
+
+#Terraform backends
+https://www.terraform.io/docs/language/settings/backends/index.html
+
+#Terraform OCI provider
+https://registry.terraform.io/providers/hashicorp/oci/latest/docs
+
+#Oracle official documentation for terraform
+https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraform.htm
+
+#Terraform Registry OCI 
+https://registry.terraform.io/browse/modules?provider=oci
+
+#Terraform variables (variables.tf terraform.tfvars)
+https://www.terraform.io/docs/language/values/variables.html
+
+#Terraform outputs (outputs.tf)
+https://www.terraform.io/docs/language/values/outputs.html
+
+#Configuration language tutorial collection
+https://learn.hashicorp.com/collections/terraform/configuration-language
+
+#Terraform modules
+https://www.terraform.io/docs/language/modules/index.html#using-modules

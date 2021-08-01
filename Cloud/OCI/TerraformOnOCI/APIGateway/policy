@@ -1,0 +1,10 @@
+
+#For user access
+Allow group <group-name> to manage api-gateway-family in compartment <compartment-name>
+Allow group <group-name> to manage virtual-network-family in compartment <compartment-name>
+Allow group <group-name> to use functions-family in compartment <compartment-name>
+
+#For function as an API back end (Dynamic group)
+ALL {resource.type = 'ApiGateway', resource.comparment.id = 'compartment'ocid'}
+
+Allow dynamic'group <dynamic-group-name> to use functions-family in compartment <compartment-name>

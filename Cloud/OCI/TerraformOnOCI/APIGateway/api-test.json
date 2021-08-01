@@ -1,0 +1,14 @@
+{
+    "requestPolicies": {},
+    "routes": [
+        {
+            "path":"<api-route-path>",
+            "methods": ["<method-list>"],
+            "backend": {
+                "type": "<backend-types>",
+                "<backend-target>": "<identifier>"
+            },
+            "requestPolicies": {}
+        }
+    ]
+}
