@@ -1,0 +1,12 @@
+{
+    "Type" : "AWS::Chatbot::SlackChannelConfiguration",
+    "Properties" : {
+        "ConfigurationName" : SlackChannel,
+        "IamRoleArn" : arn:aws:iam::915430536665:user/AdmChatSlack,
+        "LoggingLevel" : ERROR,
+        "SlackChannelId" : C02B7Q7S42W,
+        "SlackWorkspaceId" : T02B4A1RJAH,
+        "SnsTopicArns" : [ arn:aws:sns:us-east-1:915430536665:SlackTopic ]
+      }
+  }
+  
