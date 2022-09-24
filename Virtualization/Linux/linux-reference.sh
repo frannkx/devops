@@ -23,3 +23,14 @@ sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch
 sudo yum install stress -y
 
 #referencia: https://snapcraft.io/install/stress-ng/rhel /https://yum.oracle.com/getting-started.html#installing-software-from-oracle-linux-yum-server
+
+#SSH Tuneling over bastion host
+bastionhost 18.205.19.21
+web 172.31.88.224
+
+ssh -i ~/.ssh/srv-key.pem ec2-user@18.205.19.21
+
+ssh -i ~/.ssh/srv-key.pem -L 127.0.0.1:33306:172.31.88.224:3306 ec2-user@18.205.19.21
+
+#referencia: https://www.ssh.com/academy/ssh/tunneling/example
+#https://docs.aws.amazon.com/es_es/mwaa/latest/userguide/tutorials-private-network-bastion.html
