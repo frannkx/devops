@@ -34,3 +34,28 @@ ssh -i ~/.ssh/srv-key.pem -L 127.0.0.1:33306:172.31.88.224:3306 ec2-user@18.205.
 
 #referencia: https://www.ssh.com/academy/ssh/tunneling/example
 #https://docs.aws.amazon.com/es_es/mwaa/latest/userguide/tutorials-private-network-bastion.html
+
+
+
+##---------Instalacion Nginx en Ubuntu------------
+
+#Busqueda de paquete nginx
+sudo apt search "nginx$"
+
+sudo apt update && sudo apt install nginx
+
+#Archivo de confiuracion de nginx
+/etc/nginx/nginx.conf
+
+#ruta raiz de sitio web
+/var/www/html
+
+#configuracion de sitio por defecto 
+/etc/nginx/sites-enabled/default #copiarlo y crear nuevo archivo con el nombre del dominio del sitio luego crear enlace simbolico desde ../sites-available
+
+#validacion de funcionamiento de nginx
+sudo systemctl status nginx
+
+sudo netstat -tulpn
+
+curl -i localhost
