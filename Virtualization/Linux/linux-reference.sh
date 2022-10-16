@@ -48,5 +48,27 @@ sudo dnf system-upgrade download --releasever=36
 sudo dnf system-upgrade reboot
 
 
+#ouput
+Transaction saved to /var/lib/dnf/system-upgrade/system-upgrade-transaction.json.
+Download complete! Use 'dnf system-upgrade reboot' to start the upgrade.
+To remove cached metadata and transaction use 'dnf system-upgrade clean'
+Los paquetes descargados se han guardado en caché para la próxima transacción.
+Puede borrar los paquetes de la caché ejecutando 'dnf clean packages'.
+
 #referencia
 https://yourgeekweb.com/es/2019/03/24/como-actualizar-fedora-desde-la-terminal/
+
+## Cambio de entorno grafico en Fedora ##
+dnf grouplist -v
+sudo dnf install [@environment-name] -y
+sudo dnf install switchdesk switchdesk-gui -y 
+sudo switchdesk kde 
+sudo dnf remove [@environment-name]
+
+#Reference: https://noviello.it/es/como-instalar-y-cambiar-entornos-de-escritorio-en-fedora/
+
+## Gestion de usuarios##
+
+# Sacar sesion de usuario 
+
+sudo pkill -9 -u {user}
