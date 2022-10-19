@@ -6,7 +6,8 @@
         "LoggingLevel" : ERROR,
         "SlackChannelId" : C02B7Q7S42W,
         "SlackWorkspaceId" : T02B4A1RJAH,
-        "SnsTopicArns" : [ arn:aws:sns:us-east-1:915430536665:SlackTopic ]
+        "SnsTopicArns" : [ arn:aws:sns:us-east-1:915430536665:SlackTopic
+        ]
       }
   }
   

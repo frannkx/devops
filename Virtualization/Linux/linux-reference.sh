@@ -72,3 +72,70 @@ sudo dnf remove [@environment-name]
 # Sacar sesion de usuario 
 
 sudo pkill -9 -u {user}
+
+
+## Grabar iso a USB ##
+
+dd bs=4M if=/home/gollum23/Downloads/manjaro-kde-21.0.4-210506-linux510.iso of=/dev/sdc status=progress oflag=sync
+
+## Instalacion de node.js#
+
+sudo apt install nodejs
+
+#Instalacion por nvm
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | zsh
+
+zsh
+ 
+ nvm install --lts
+
+node -v
+
+#Referencia: https://github.com/nvm-sh/nvm#manual-install
+
+## Proyecto inicial react js
+
+npx create-react-app my-app mi-primer-app
+
+cd mi-primer-app
+
+npm start
+
+
+#Referencias: https://es.reactjs.org/
+# 
+
+## Configuracion de GIT
+
+git config --global user.name "frannkx"
+git config --global user.email "frannkx@gmail.com"
+
+git config --list
+
+# crear llave SSH 
+ssh-keygen -t rsa -b 4096 -C frannkx@gmail.com
+
+eval "$(ssh-agent -s)"
+
+#agregar llave privada al servidor ssh
+ssh-add ~/.ssh/id_rsa
+
+#agregar llave publica a github
+
+sudo apt install xclip
+
+#copiar al portapapaeles
+xclip -selection clipboard < ~/.ssh/id_rsa.pub
+
+#pegar contenido en administracion de llaves en github
+
+a;adir origen remoto
+git remote add origin urlxxx.git
+
+git remote -v
+
+git branch -M main
+git push -u origin main
+
+
