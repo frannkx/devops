@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo1-nodeport
+  namespace: default
+spec:
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32387
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: echo1
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
+EOF

@@ -1,0 +1,196 @@
+
+#Set up Lab Environment
+
+ssh oracle@130.61.232.68
+
+
+Confirm the environment is ready.
+
+kubectl get pods -A
+
+#Create a Deployment on a Pod and Request Details
+
+Create a deployment of echoserver.
+
+kubectl create deployment test --image=k8s.gcr.io/echoserver:1.4
+
+Use JSONPath to assign the Pod name to a variable.
+TESTPOD=$(kubectl get pods -o jsonpath='{ $.items[*].metadata.name }')
+
+Test the variable assignment.
+kubectl get pods $TESTPOD
+
+Request selected information about the Pod.
+kubectl get pod $TESTPOD --output custom-columns=NAME:metadata.name,NODE_IP:status.hostIP,POD_IP:status.podIP
+
+Get the Pod details.
+kubectl describe pod $TESTPOD
+
+#Create a Deployment with a YAML File
+
+Create the deployment file
+
+cat << 'EOF' | tee mydeployment.yaml > /dev/null
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: echo1
+spec:
+ selector:
+   matchLabels: 
+     app: echo1
+ template:
+   metadata:
+     labels:
+       app: echo1
+   spec:
+     containers:
+     - name: echoserver
+       image: k8s.gcr.io/echoserver:1.4
+EOF
+
+
+Deploy the application on a Pod using the Deployment manifest file.
+kubectl apply -f mydeployment.yaml
+
+
+List the Pod managed by the deployment.
+kubectl get pods -l app=echo1
+
+Verify the Deployment succeeded.
+kubectl get deploy echo1
+
+Return more detailed information for a deployment.
+kubectl describe deploy echo1
+
+#Use ClusterIP Service
+
+Get a list of nodes.
+kubectl get nodes
+
+Query kube-proxy mode.
+Running kube-proxy in iptables mode  causes packets sent to a ClusterIP Service never to be source NAT'd.
+curl -w "\n" http://localhost:10249/proxyMode
+
+Create the ClusterIP Service.
+kubectl expose deployment echo1 --name=clusterip-service --port=80 --target-port=8080
+
+
+Get the IP address assigned to the cluster.
+kubectl get svc clusterip-service
+
+Create a pod in the same cluster for accessing the ClusterIP Service.
+kubectl run ol -it --image=oraclelinux:8 --restart=Never --rm
+
+
+Get the IP address of the Oracle Linux container.
+ip -br a
+
+Test the nginx webserver within echo1.
+curl -w "\n" <CLUSTER-IP_ADDRESS>
+curl -w "\n" 10.100.159.125
+
+
+Exit the container.
+exit
+
+#Use NodePort Service with a YAML File
+
+Define a Service file.
+cat << 'EOF' | tee myservice.yaml > /dev/null
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo1-nodeport
+  namespace: default
+spec:
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32387
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: echo1
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
+EOF
+
+Create the Service.
+kubectl apply -f myservice.yaml
+
+Display how Kubernetes stores the newly created Service
+kubectl get service echo1-nodeport -o yaml
+
+Describe the Pods service.
+kubectl describe svc echo1-nodeport
+
+Get the object Endpoints.
+kubectl get endpoints echo1-nodeport
+
+List the Pods running the application.
+kubectl get pods --output=wide
+
+List the Services.
+kubectl get svc -o wide
+
+Get the IP address of the node.
+ip -br a
+
+Use JSONPath to assign the NodePort a variable.
+NODEPORT=$(kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services echo1-nodeport)
+
+Use JSONPath to assign the Node IP to a variable.
+NODES=$(kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="InternalIP")].address }')
+
+Create a firewall rule.
+sudo firewall-cmd --permanent --add-port=$NODEPORT/tcp
+sudo firewall-cmd --reload
+
+Use node address and node port to verify application.
+curl -s $NODES:$NODEPORT
+
+#Remove Deployments and Services
+
+Remove Services.
+kubectl delete svc clusterip-service echo1-nodeport
+
+Remove Deployments.
+kubectl delete deployments echo1
+kubectl delete deploy test
+
+
+References:
+
+Lab Run Kubernetes on Oracle Linux
+https://luna.oracle.com/lab/01e69515-8cda-4d6e-89af-849f324c4b7f/steps
+
+
+Deployment Documentation 
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
+Proxies in Kubernetes
+https://kubernetes.io/docs/concepts/cluster-administration/proxies/#xd_co_f=NmJmYzcyYmQtNmRiOS00MGNiLWE3NzktMjdkODdkOWFmYmM5~
+
+kube-Proxy iptables
+https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-iptables
+
+kubectl delete
+https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_delete/#xd_co_f=NmJmYzcyYmQtNmRiOS00MGNiLWE3NzktMjdkODdkOWFmYmM5~
+
+
+Welcome to Oracle Linux Track
+https://oracle-samples.github.io/oltrain/OL/ol.html
+
+Oracle Linux 8
+https://docs.oracle.com/en/operating-systems/oracle-linux/8/
+
+Oracle Cloud Native Environment
+https://docs.oracle.com/en/operating-systems/olcne/index.html
+
+Oracle labs
+https://docs.oracle.com/learn/

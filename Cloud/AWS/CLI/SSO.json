@@ -1,0 +1,45 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "iam:UpdateLoginProfile",
+            "Resource": "*"
+        },
+		{
+            "Action": [
+				"ec2:StopInstances", 
+				"ec2:StartInstances", 
+				"ec2:RebootInstances",
+				"ec2:CreateImage",
+				"ec2:DescribeTags",
+				"ec2:CreateTags",
+				"ec2:CreateSnapshot",
+				"ec2:DescribeSnapshots",
+				"ec2:DescribeSnapshotAttribute",
+				"ec2:AuthorizeSecurityGroupEgress",
+				"ec2:AuthorizeSecurityGroupIngress",
+				"ec2:RevokeSecurityGroupEgress",
+				"ec2:RevokeSecurityGroupIngress"
+			],
+			"Effect": "Allow",
+            "Resource": ["*"]
+        },
+		{
+            "Action": [
+				"rds:StopDBInstance",
+				"rds:StartDBInstance",
+				"rds:RebootDBInstance",
+				"rds:CreateDBSnapshot",
+				"rds:AddTagsToResource",
+				"rds:DescribeDBSnapshots",
+				"rds:DescribeDBClusters",
+				"rds:DescribeDBClusterSnapshotAttributes",
+				"rds:AuthorizeDBSecurityGroupIngress",
+				"rds:RevokeDBSecurityGroupIngress"
+			],
+			"Effect": "Allow",
+            "Resource": ["*"]
+        }
+    ]
+}
