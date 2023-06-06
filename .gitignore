@@ -2,4 +2,4 @@ gcm-linux_amd64.2.0.785.deb
 -07-23-05-17.pem
 -07-23-05-17_public.pem
 .vscode/
-Docker/getting-started/app/node_modules/
+Docker/getting-started/app/node_modules/*
