@@ -34,8 +34,11 @@ docker ps -a
 # Ver logs de un contenedor
 docker logs -f [container-id]
 
-# Crear nueva imagen de docker
+# Crear nueva imagen de docker a partir de un contenedor
 docker commit [ID container] [nombre]
+
+# Crear imagen a partir de archivo Dockerfile (estando en la misma carpeta)
+docker build -t getting-started .
 
 # Eliminar Imagen
 docker image rm [nombre]
@@ -46,6 +49,7 @@ docker tag local-image:tagname new-repo:tagname
 docker login -u 19583698
 docker tag getting-started 19583698/getting-started
 docker push 19583698/getting-started
+docker push 19583698/getting-started:tagname
 
 
 
@@ -63,6 +67,12 @@ docker rm -f [nombre]
 # Crear un volumen 
 docker volume create [nombre-volumen]
 
+#levantar un contenedor con  montando el volumen en una ruta
+docker run -dp 3000:3000 -v [nombre-volumen]:/etc/todos [imagen]
+
+#Ubicar almacenamiento real del volumen 
+docker volume inspect todo-db
+
 # Levantar contenedor mysql con persistencia de datos 
 docker run -d -p 33060:3306 --name mysql-db3 -e MYSQL_ROOT_PASSWORD=DbR00t --mount src=db-volume,dst=/var/lib/mysql mysql
 
@@ -75,6 +85,7 @@ docker volume ls
 #referencia https://platzi.com/tutoriales/1432-docker/3268-como-crear-un-contenedor-con-docker-mysql-y-persistir-la-informacion/
 # referencia 2 https://clouding.io/hc/es/articles/360010283060-Trabajando-con-im%C3%A1genes-en-Docker   
 # referencia 3 https://www.josedomingo.org/pledin/2016/02/enlazando-contenedores-docker/
+# referencia 4 https://learn.microsoft.com/es-mx/visualstudio/docker/tutorials/docker-tutorial
 
 
 ## Ambiente Wordpress en docker
@@ -166,3 +177,7 @@ docker image history getting-started:latest
 
 #view the layers of image creation not truncated
 docker image history --no-trunc getting-started
+
+docker run -dp 3000:3000 -w /app -v ${PWD}:/app 19583698/getting-started sh -c "yarn install && yarn run dev"
+
+docker run -dp 3000:3000 -w /app -v C:\Users\Francisco Paredes\Documents\Personal\devops\Docker\getting-started\app:/app node:12-alpine sh -c "yarn install && yarn run dev"  
