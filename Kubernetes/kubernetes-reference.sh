@@ -209,3 +209,6 @@ echo Name of the Pod: $POD_NAME
 kubectl label pod $POD_NAME app=v1
 
 
+#Reference:
+# Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
+#Oracle CE https://docs.oracle.com/es-ww/iaas/Content/ContEng/Concepts/contengclustersnodes.htm#processes
