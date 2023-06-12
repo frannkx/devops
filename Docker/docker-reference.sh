@@ -82,11 +82,8 @@ docker volume prune
 # Listar volumenes creados
 docker volume ls
 
-#referencia https://platzi.com/tutoriales/1432-docker/3268-como-crear-un-contenedor-con-docker-mysql-y-persistir-la-informacion/
-# referencia 2 https://clouding.io/hc/es/articles/360010283060-Trabajando-con-im%C3%A1genes-en-Docker   
-# referencia 3 https://www.josedomingo.org/pledin/2016/02/enlazando-contenedores-docker/
-# referencia 4 https://learn.microsoft.com/es-mx/visualstudio/docker/tutorials/docker-tutorial
-
+#Uso de montajes de enlace
+docker run -dp 80:3000 -w /test -v ${PWD}:/test 19583698/getting-started
 
 ## Ambiente Wordpress en docker
 
@@ -178,6 +175,26 @@ docker image history getting-started:latest
 #view the layers of image creation not truncated
 docker image history --no-trunc getting-started
 
-docker run -dp 3000:3000 -w /app -v ${PWD}:/app 19583698/getting-started sh -c "yarn install && yarn run dev"
+## Contextos
 
-docker run -dp 3000:3000 -w /app -v C:\Users\Francisco Paredes\Documents\Personal\devops\Docker\getting-started\app:/app node:12-alpine sh -c "yarn install && yarn run dev"  
+#Listar contextos
+docker context ls
+
+#Inspeccionar el contexto 
+docker context inspect default
+
+# Create context
+docker context create k8s-test \
+  --default-stack-orchestrator=kubernetes \
+  --kubernetes config-file=/home/ubuntu/.kube/config \
+  --docker host=unix:///var/run/docker.sock
+
+#Ejecutar comandos dentro del contenedor
+docker exec -it container-name sh
+
+#referencia https://platzi.com/tutoriales/1432-docker/3268-como-crear-un-contenedor-con-docker-mysql-y-persistir-la-informacion/
+# referencia 2 https://clouding.io/hc/es/articles/360010283060-Trabajando-con-im%C3%A1genes-en-Docker   
+# referencia 3 https://www.josedomingo.org/pledin/2016/02/enlazando-contenedores-docker/
+# referencia 4 https://learn.microsoft.com/es-mx/visualstudio/docker/tutorials/docker-tutorial
+# referencia 5 https://docs.docker.com/engine/context/working-with-contexts/
+# Azure ACI integration>https://docs.docker.com/cloud/aci-integration/

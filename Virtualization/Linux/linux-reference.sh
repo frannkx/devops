@@ -147,3 +147,9 @@ git show
 git log archivo
 
 apt list --upgradable
+
+#Listar servcios y sus estados
+systemctl list-unit-files --type=service
+
+#References:
+# WSL Microsoft https://learn.microsoft.com/en-us/windows/wsl/wsl-config#configure-global-options-with-wslconfig
