@@ -200,3 +200,4 @@ docker exec -it container-name sh
 # Azure ACI integration>https://docs.docker.com/cloud/aci-integration/
 #Dockerfile Documentation https://docs.docker.com/engine/reference/builder/
 # Docker Compose Documentation https://docs.docker.com/compose/compose-file/
+# Compose Examples https://github.com/docker/awesome-compose
