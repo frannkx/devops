@@ -198,3 +198,5 @@ docker exec -it container-name sh
 # referencia 4 https://learn.microsoft.com/es-mx/visualstudio/docker/tutorials/docker-tutorial
 # referencia 5 https://docs.docker.com/engine/context/working-with-contexts/
 # Azure ACI integration>https://docs.docker.com/cloud/aci-integration/
+#Dockerfile Documentation https://docs.docker.com/engine/reference/builder/
+# Docker Compose Documentation https://docs.docker.com/compose/compose-file/
