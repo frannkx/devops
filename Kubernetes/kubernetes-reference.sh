@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #Lab instaling minikube on Linux
 
 ##Create a cluster
@@ -425,4 +424,5 @@ kubectl label pod $POD_NAME app=v1
 #Reference:
 # Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
 #Oracle CE https://docs.oracle.com/es-ww/iaas/Content/ContEng/Concepts/contengclustersnodes.htm#processes
->>>>>>> 04af378ebf84214796ba03ee1a5bf672602a85dc
+# Kubernetes Path: https://learn.microsoft.com/es-es/training/paths/intro-to-kubernetes-on-azure/
+

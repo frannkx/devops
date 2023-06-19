@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#### Manejo de imagenes ####
 # Buscar imagenes en Docker
 docker search [nombre]
 
@@ -9,11 +10,34 @@ docker pull [nombre:version]
 # Listando Imagenes
 docker images
 
+#### Manipulacion de estados de contenedores ####
+
+#Ver estado de contenedores actuales
+docker ps -a
+
+#Correr contenedor manteniendolo en segundo plano
+docker run -d tmp-ubuntu
+
 # Correr un contenedor de manera interactiva
 docker run -t -i ubuntu /bin/bash
+docker run -it ubuntu /bin/sh
 
 # Correr contenedor mysql de manera desatachada
 docker run -d -p 3306:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=DbR00t mysql
+
+#Pausar un contenedor en ejecucion
+docker pause happy_wilbur
+
+#Reiniciar un contenedor
+docker restart happy_wilbur
+
+#Detener un contenedor
+docker stop happy_wilbur
+
+#Eliminar contenedor
+docker rm happy_wilbur
+
+#### Manejo de almacenamiento en contenedores ####
 
 #Correr contenedor con bind de un working directory
 docker run -dp 3000:3000 \
@@ -201,3 +225,4 @@ docker exec -it container-name sh
 #Dockerfile Documentation https://docs.docker.com/engine/reference/builder/
 # Docker Compose Documentation https://docs.docker.com/compose/compose-file/
 # Compose Examples https://github.com/docker/awesome-compose
+# Microsoft Learn: https://learn.microsoft.com/es-es/training/paths/intro-to-kubernetes-on-azure/
