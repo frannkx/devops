@@ -21,10 +21,14 @@ kubectl cluster-info
 
 #view nodes in the cluster
 kubectl get nodes
+kubectl get nodes -o wide
+
+#ver servicios que estan corriendo
+sudo kubectl get services -o wide
+sudo kubectl get services -o wide --all-namespaces
 
 #Open the Kubernetes dashboard in a browser:
 minikube dashboard
-
 
 minikube dashboard --url
 
@@ -419,6 +423,54 @@ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
 export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
 echo Name of the Pod: $POD_NAME
 kubectl label pod $POD_NAME app=v1
+
+#### Instalacion de entorno MicroK8s ####
+# Instalar multipass https://github.com/canonical/multipass/releases
+
+# configurar y ejecutar la imagen de la máquina virtual de MicroK8s en (windows)
+multipass launch --name microk8s-vm --memory 4G --disk 40G
+
+#acceder a la instancia de máquina virtual (windows)
+multipass shell microk8s-vm
+
+#instalar microk8s
+sudo snap install microk8s --classic
+
+# Preparacion del cluster
+sudo microk8s.status --wait-ready
+
+#habilitará el DNS, el panel y los complementos del registro
+sudo microk8s.enable dns dashboard registry
+
+#asignar alias kubectl
+sudo snap alias microk8s.kubectl kubectl
+
+##Desinstalación de MicroK8s del multipass
+sudo microk8s.disable dashboard dns registry
+sudo snap remove microk8s
+exit
+multipass stop microk8s-vm
+multipass delete microk8s-vm
+multipass purge
+########
+
+##### Instalacion de servidor web en cluster ####
+
+# pod
+# conjunto de replicas = ReplicaSet
+# implementacion = deployment
+
+# crear la implementación de NGINX
+kubectl create deployment nginx --image=nginx
+
+# Ver implementacion 
+sudo kubectl get deployments
+
+# ver pods creados
+sudo kubectl get pods
+
+# Escalar replicas de deployment
+sudo kubectl scale --replicas=3 deployments/nginx
 
 
 #Reference:

@@ -37,7 +37,15 @@ docker stop happy_wilbur
 #Eliminar contenedor
 docker rm happy_wilbur
 
+#Supervisar estadisticas del contenedor
+docker stats
+
 #### Manejo de almacenamiento en contenedores ####
+
+# creacion de Volumen 
+docker volume create
+
+# montaje de enlace
 
 #Correr contenedor con bind de un working directory
 docker run -dp 3000:3000 \
@@ -74,8 +82,6 @@ docker login -u 19583698
 docker tag getting-started 19583698/getting-started
 docker push 19583698/getting-started
 docker push 19583698/getting-started:tagname
-
-
 
 docker push new-repo:tagname
 
@@ -119,6 +125,28 @@ sudo docker pull wordpress:5.6-php8.0-apache
 
 #docker run --name servidor_mysql -e MYSQL_ROOT_PASSWORD=asdasd -d mysql
 docker run --name servidor_wp -p 80:80 --link servidor_mysql:mysql -e MYSQL_ROOT_PASSWORD=p4ssw0rd -d wordpress
+
+#### Manejo de redes ####
+
+#Docker proporciona configuraciones de red diferentes para Linux y Windows.
+
+#Para Linux, hay seis opciones de red preconfiguradas:
+
+#-Red de puente
+#-Red de host
+#-Overlay
+#-IPvLan
+#-MACvLan
+#-None
+
+#Para Windows, hay seis opciones de red preconfiguradas:
+
+#-NAT (traducción de direcciones de red)
+#-Transparente
+#-Overlay
+#-L2Bridge
+#-L2Tunnel
+#-None
 
 #Crear red
 docker network create todo-app
