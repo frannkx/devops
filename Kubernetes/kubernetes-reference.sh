@@ -471,10 +471,12 @@ sudo kubectl get pods
 
 # Escalar replicas de deployment
 sudo kubectl scale --replicas=3 deployments/nginx
+sudo kubectl scale --replicas=1 deployments/xxxx
 
 
 #Reference:
 # Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
 #Oracle CE https://docs.oracle.com/es-ww/iaas/Content/ContEng/Concepts/contengclustersnodes.htm#processes
 # Kubernetes Path: https://learn.microsoft.com/es-es/training/paths/intro-to-kubernetes-on-azure/
-
+# Azure Kubernetes Services https://azure.microsoft.com/es-mx/products/kubernetes-service/
+# Microk8s https://microk8s.io/
