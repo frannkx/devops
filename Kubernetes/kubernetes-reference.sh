@@ -473,6 +473,73 @@ sudo kubectl get pods
 sudo kubectl scale --replicas=3 deployments/nginx
 sudo kubectl scale --replicas=1 deployments/xxxx
 
+# Creación de un clúster de Azure Kubernetes Service
+export RESOURCE_GROUP=rg-contoso-video
+export CLUSTER_NAME=aks-contoso-video
+export LOCATION=<myLocation> eastus
+export LOCATION=eastus
+
+# Ejecute el comando az group create para crear un grupo de recursos. Implemente todos los recursos en este nuevo grupo de recursos.
+az group create --name=$RESOURCE_GROUP --location=$LOCATION
+
+# Ejecute el comando az aks create para crear un clúster de AKS.
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --node-count 2 \
+    --enable-addons http_application_routing \
+    --generate-ssh-keys \
+    --node-vm-size Standard_B2s \
+    --network-plugin azure
+
+# Ejecute el comando az aks nodepool add para agregar otro grupo de nodos que use el sistema operativo Linux predeterminado.
+
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME \
+    --name userpool \
+    --node-count 2 \
+    --node-vm-size Standard_B2s
+
+# Vincular al kubectl
+az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+
+#ver nodos
+kubectl get nodes
+
+# Crear un deployment para implementacion de aplicacion
+touch deployment.yaml
+
+kubectl apply -f ./deployment.yaml
+kubectl get deploy contoso-website
+kubectl get pods
+
+# Creacion de un servicio
+touch service.yaml
+
+kubectl apply -f ./service.yaml
+kubectl get service contoso-website
+
+# Creacion de un ingress
+
+touch ingress.yaml
+
+# consultar la lista de zonas de Azure DNS.
+az network dns zone list
+
+az aks show \
+  -g $RESOURCE_GROUP \
+  -n $CLUSTER_NAME \
+  -o tsv \
+  --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName
+
+4abd73fbf90c4e39aa15.eastus.aksapp.io
+
+kubectl apply -f ./ingress.yaml
+kubectl get ingress contoso-website
+
+
+
 
 #Reference:
 # Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
@@ -480,3 +547,7 @@ sudo kubectl scale --replicas=1 deployments/xxxx
 # Kubernetes Path: https://learn.microsoft.com/es-es/training/paths/intro-to-kubernetes-on-azure/
 # Azure Kubernetes Services https://azure.microsoft.com/es-mx/products/kubernetes-service/
 # Microk8s https://microk8s.io/
+# Datadog K8s https://learn.datadoghq.com/bundles/k8s-fundamentals
+# Lab Oracle https://docs.oracle.com/en/learn/ol-kube/index.html#run-kubernetes-on-oracle-linux
+# GKE https://www.cloudskillsboost.google/course_templates/2?catalog_rank=%7B%22rank%22%3A8%2C%22num_filters%22%3A0%2C%22has_search%22%3Atrue%7D&search_id=24353318
+
