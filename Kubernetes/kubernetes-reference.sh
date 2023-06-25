@@ -538,6 +538,9 @@ az aks show \
 kubectl apply -f ./ingress.yaml
 kubectl get ingress contoso-website
 
+#Eliminar aks
+borrar security group
+kubectl config delete-context aks-contoso-video
 
 
 
