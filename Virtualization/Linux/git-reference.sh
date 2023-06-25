@@ -34,4 +34,14 @@ git remote -v
 git branch -M main
 git push -u origin main
 
+# Verifivar configuracion
+~/.gitconfig
+repo/.git/config
+C:\Users\User\.config\git
 
+
+#Ref: https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/wsl.md#configuring-wsl-without-git-for-windows
+git config --global credential.helper "/mnt/c/Users/Francisco\ Paredes/AppData/Local/Programs/Git/mingw64/bin/git-credential-manager.exe" --replace-all
+
+# For Azure DevOps support only
+git config --global credential.https://dev.azure.com.useHttpPath true --add
