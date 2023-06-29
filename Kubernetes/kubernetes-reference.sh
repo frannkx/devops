@@ -550,7 +550,12 @@ kubectl apply \
 
 kubectl get pods --namespace costsavings -o wide
 
+#### Manejo de contextos en kubernetes ####
 
+# Ver contextos actuales
+kubectl config get-contexts
+
+kubectl config use-context [nombre-del-contexto]
 
 #Reference:
 # Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
