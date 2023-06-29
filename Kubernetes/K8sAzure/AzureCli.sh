@@ -57,6 +57,8 @@ az aks nodepool scale \
 
 ####################################################
 
+############# AKS Cluster Scale to 0 #######################################
+
 REGION_NAME=eastus
 RESOURCE_GROUP=rg-akscostsaving
 AKS_CLUSTER_NAME=akscostsaving-$RANDOM
@@ -82,7 +84,7 @@ az aks create \
     --vm-set-type VirtualMachineScaleSets \
     --generate-ssh-keys
 
-az aks nodepool list --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER_NAME
+az aks nodepool list --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER_NAME --output table
 
 az aks nodepool add \
     --resource-group $RESOURCE_GROUP \
@@ -90,7 +92,7 @@ az aks nodepool add \
     --name batchprocpl \
     --node-count 2
 
-az aks nodepool list --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER_NAME
+az aks nodepool list --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER_NAME --output table
 
 # Ejecute el comando az aks nodepool scale y use el parámetro --node-count para establecer el valor del recuento de nodos en 0
 az aks nodepool scale \
@@ -102,3 +104,55 @@ az aks nodepool scale \
 az aks get-credentials \
     --resource-group $RESOURCE_GROUP \
     --name $AKS_CLUSTER_NAME
+
+
+#### AKS con el escalador automático de clúster ####
+
+#registrar la característica spotpoolpreview
+az feature register --namespace "Microsoft.ContainerService" --name "spotpoolpreview"
+
+# comprobar el estado del registro 
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService/spotpoolpreview')].{Name:name,State:properties.state}"
+
+#propagar el nuevo registro
+az provider register --namespace Microsoft.ContainerService
+
+# Instalación de la extensión aks-preview de la CLI
+az extension add --name aks-preview
+
+# Compruebe cuál es la versión instalada de la extensión >0.4.53
+az extension show --name aks-preview --query [version]
+
+# Si ya ha instalado la extensión y necesita actualizarla a una versión más reciente
+az extension update --name aks-preview
+
+
+## Adición de un grupo de nodos de acceso puntual a un clúster de AKS ##
+az aks nodepool add \
+    --resource-group resourceGroup \
+    --cluster-name aksCluster \
+    --name spotpool01 \
+    --enable-cluster-autoscaler \
+    --max-count 3 \
+    --min-count 1 \
+    --priority Spot \
+    --eviction-policy Delete \
+    --spot-max-price -1 \
+    --no-wait
+
+--
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $AKS_CLUSTER_NAME \
+    --name batchprocpl2 \
+    --enable-cluster-autoscaler \
+    --max-count 3 \
+    --min-count 1 \
+    --priority Spot \
+    --eviction-policy Delete \
+    --spot-max-price -1 \
+    --node-vm-size Standard_DS2_v2 \
+    --no-wait
+
+
+

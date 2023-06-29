@@ -542,6 +542,14 @@ kubectl get ingress contoso-website
 borrar security group
 kubectl config delete-context aks-contoso-video
 
+kubectl create namespace costsavings
+
+kubectl apply \
+--namespace costsavings \
+-f spot-node-deployment.yaml
+
+kubectl get pods --namespace costsavings -o wide
+
 
 
 #Reference:
