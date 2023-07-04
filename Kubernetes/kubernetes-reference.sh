@@ -557,6 +557,20 @@ kubectl config get-contexts
 
 kubectl config use-context [nombre-del-contexto]
 
+#### Manejo de secretos 
+
+# Crear secreto
+
+#convertir certificado a pfx
+openssl pkcs12 -in testapi.starbucks.pe.pem -inkey testapi_starbucks_pe.key -export -out certifi
+cado.pfx
+
+kubectl create secret tls <nombre-secreto> --cert=<ruta-certificado> --key=<ruta-clave-privada>
+
+kubectl create secret tls testapi.stackbucks.pe --cert=/home/daruischts/testapi_stackbucks_pe.crt --key=/home/daruischts/testapi_stackbucks_pe.key
+
+#colocar el secreto en el deployment del ingress
+
 #Reference:
 # Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
 #Oracle CE https://docs.oracle.com/es-ww/iaas/Content/ContEng/Concepts/contengclustersnodes.htm#processes
@@ -566,4 +580,5 @@ kubectl config use-context [nombre-del-contexto]
 # Datadog K8s https://learn.datadoghq.com/bundles/k8s-fundamentals
 # Lab Oracle https://docs.oracle.com/en/learn/ol-kube/index.html#run-kubernetes-on-oracle-linux
 # GKE https://www.cloudskillsboost.google/course_templates/2?catalog_rank=%7B%22rank%22%3A8%2C%22num_filters%22%3A0%2C%22has_search%22%3Atrue%7D&search_id=24353318
+# Cert Let's Encrypt en K8s https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes-es
 
