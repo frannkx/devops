@@ -197,6 +197,9 @@ curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
 
 kubectl logs $POD_NAME
 
+#Editar deployment 
+kubectl edit ingress -n namespace nombre-ingress
+
 #Executing command on the container
 kubectl exec $POD_NAME env
 kubectl exec -ti $POD_NAME bash
@@ -542,6 +545,9 @@ kubectl get ingress contoso-website
 borrar security group
 kubectl config delete-context aks-contoso-video
 
+
+############ AKS con el escalador automático de clúster###########
+
 kubectl create namespace costsavings
 
 kubectl apply \
@@ -557,14 +563,12 @@ kubectl config get-contexts
 
 kubectl config use-context [nombre-del-contexto]
 
-#### Manejo de secretos 
-
-# Crear secreto
+#### Manejo de secretos ####
 
 #convertir certificado a pfx
-openssl pkcs12 -in testapi.starbucks.pe.pem -inkey testapi_starbucks_pe.key -export -out certifi
-cado.pfx
+openssl pkcs12 -in testapi.starbucks.pe.pem -inkey testapi_starbucks_pe.key -export -out certificado.pfx
 
+# Crear secreto
 kubectl create secret tls <nombre-secreto> --cert=<ruta-certificado> --key=<ruta-clave-privada>
 
 kubectl create secret tls testapi.stackbucks.pe --cert=/home/daruischts/testapi_stackbucks_pe.crt --key=/home/daruischts/testapi_stackbucks_pe.key

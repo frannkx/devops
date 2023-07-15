@@ -106,7 +106,8 @@ az aks get-credentials \
     --name $AKS_CLUSTER_NAME
 
 
-#### AKS con el escalador automático de clúster ####
+
+############ AKS con el escalador automático de clúster###########
 
 #registrar la característica spotpoolpreview
 az feature register --namespace "Microsoft.ContainerService" --name "spotpoolpreview"
@@ -153,6 +154,12 @@ az aks nodepool add \
     --spot-max-price -1 \
     --node-vm-size Standard_DS2_v2 \
     --no-wait
+
+#mostrar los detalles del nuevo grupo de nodos de acceso puntual para el servicio de procesamiento por lotes
+az aks nodepool show \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $AKS_CLUSTER_NAME \
+    --name batchprocpl2
 
 
 
