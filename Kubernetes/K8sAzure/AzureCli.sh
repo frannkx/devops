@@ -1,4 +1,8 @@
 
+az login 
+az login --tenant TENANT_ID
+az account set --subscription 6a8f69dd-0e04-4482-be0c-d46a7d513569
+az aks get-credentials --resource-group rg-akscostsaving --name akscostsaving-13339
 
 ##### Creación de un clúster de Azure Kubernetes Service ####
 export RESOURCE_GROUP=rg-contoso-video
@@ -129,19 +133,20 @@ az extension update --name aks-preview
 
 
 ## Adición de un grupo de nodos de acceso puntual a un clúster de AKS ##
-az aks nodepool add \
-    --resource-group resourceGroup \
-    --cluster-name aksCluster \
-    --name spotpool01 \
-    --enable-cluster-autoscaler \
-    --max-count 3 \
-    --min-count 1 \
-    --priority Spot \
-    --eviction-policy Delete \
-    --spot-max-price -1 \
-    --no-wait
+#az aks nodepool add \
+#    --resource-group resourceGroup \
+#    --cluster-name aksCluster \
+#    --name spotpool01 \
+#    --enable-cluster-autoscaler \
+#    --max-count 3 \
+#    --min-count 1 \
+#    --priority Spot \
+#    --eviction-policy Delete \
+#    --spot-max-price -1 \
+#    --no-wait
 
 --
+
 az aks nodepool add \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $AKS_CLUSTER_NAME \
@@ -163,3 +168,48 @@ az aks nodepool show \
 
 
 
+############ Habilitación del complemento de Azure Policy para AKS ###########
+
+## Habilitación de los proveedores de recursos ContainerService y PolicyInsights
+
+az aks list -o table
+
+az provider register --namespace Microsoft.ContainerService
+
+az provider register --namespace Microsoft.PolicyInsights
+
+az feature register --namespace Microsoft.ContainerService --name AKS-AzurePolicyAutoApprove
+
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService/AKS-AzurePolicyAutoApprove')].   {Name:name,State:properties.state}"
+
+az provider register -n Microsoft.ContainerService
+
+## Instalación de las extensiones de versión preliminar de la CLI de Azure
+
+az extension add --name aks-preview
+
+az extension show --name aks-preview --query [version]
+
+az extension update --name aks-preview
+
+## Habilitación del complemento de Azure Policy
+
+az aks enable-addons \
+    --addons azure-policy \
+    --name $AKS_CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP
+
+# comprobar existencia de los pods en namespaces "gatekeeper-system" y "kube-system" (azure-policy-xxx y azure-policy-webhook-xxx)
+
+#comprobar que el complemento más reciente está instalado
+
+az aks show \
+ --resource-group $RESOURCE_GROUP\
+ --name $AKS_CLUSTER_NAME \
+ -o table --query "addonProfiles.azurepolicy"
+
+
+#Probar solicitud que infrige la politica para evaluar su reaccion
+kubectl apply \
+--namespace costsavings \
+-f test-policy.yaml
