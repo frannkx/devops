@@ -19,6 +19,9 @@ kubectl version
 #view the cluster details
 kubectl cluster-info
 
+#To further debug and diagnose cluster problems
+kubectl cluster-info dump
+
 #view nodes in the cluster
 kubectl get nodes
 kubectl get nodes -o wide

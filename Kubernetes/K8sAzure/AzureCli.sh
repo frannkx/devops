@@ -213,3 +213,18 @@ az aks show \
 kubectl apply \
 --namespace costsavings \
 -f test-policy.yaml
+
+###################### Administración de paquetes y aplicaciones con Helm ##################
+
+## Configuración del entorno - Ejecutar el script de implementación
+
+SubscriptionId=$(az account list --query '[0].id' -o tsv)
+. <(wget -q -O - https://raw.githubusercontent.com/MicrosoftDocs/mslearn-aks/main/infrastructure/setup/setup.sh ) -s $SubscriptionId -n learn-helm-deploy-aks --use-acr false --install-dot-net false
+
+## Cómo administrar un error inesperado
+
+cd ~ && \
+   rm -rf ~/clouddrive/mslearn-aks && \
+   az group delete --name learn-helm-deploy-aks-rg --yes
+
+
