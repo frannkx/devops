@@ -6,7 +6,7 @@ az aks get-credentials --resource-group rg-akscostsaving --name akscostsaving-13
 
 ##### Creación de un clúster de Azure Kubernetes Service ####
 export RESOURCE_GROUP=rg-contoso-video
-export CLUSTER_NAME=aks-contoso-video
+export CLUSTER_NAME=aks-contoso-videoÑ
 export LOCATION=<myLocation> eastus
 export LOCATION=eastus
 
@@ -103,6 +103,12 @@ az aks nodepool scale \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $AKS_CLUSTER_NAME \
     --name batchprocpl \
+    --node-count 0
+
+    az aks nodepool scale \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $AKS_CLUSTER_NAME \
+    --name nodepool1 \
     --node-count 0
 
 az aks get-credentials \

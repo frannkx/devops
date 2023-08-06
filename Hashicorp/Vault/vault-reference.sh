@@ -1,6 +1,12 @@
 
+#ver status de vault
+vault status
+
 # Ver keys y Root token
 vault operator init
+
+# desellar la boveda
+vault operator unseal
 
 #Reference: 
 # K8s https://developer.hashicorp.com/vault/docs/platform/k8s
@@ -9,3 +15,4 @@ vault operator init
 # CSI on AKS https://learn.microsoft.com/en-us/azure/aks/csi-storage-drivers
 # Vault CSI provider https://developer.hashicorp.com/vault/tutorials
 # Kubernetes https://developer.hashicorp.com/vault/docs/secrets/kubernetes
+
