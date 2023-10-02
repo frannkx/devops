@@ -92,3 +92,11 @@ Restaurar fstab
 sudo mv /etc/fstab.orig /etc/fstab
 
 sudo fallocate -l 10G /archivogrande
+
+#References:
+#https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/raid-config.html
+#https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ebs-attaching-volume.html
+#https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+#https://www.profesionalreview.com/2019/01/24/tecnologia-raid/
+#https://www.vozidea.com/crear-archivo-grande-en-linux-rapido#:~:text=En%20funci%C3%B3n%20del%20comando%20elegido%2C%20tendr%C3%ADamos%20los%20siguientes,de%201GB%3A%20sudo%20dd%20if%3D%2Fdev%2Fzero%20of%3D%2Farchivogrande%20bs%3D1024%20count%3D1024k
+
