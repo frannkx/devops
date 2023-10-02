@@ -1,0 +1,94 @@
+#/bin/bash
+
+lsblk
+
+
+NAME      MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+xvda      202:0    0   8G  0 disk
+├─xvda1   202:1    0   8G  0 part /
+├─xvda127 259:0    0   1M  0 part
+└─xvda128 259:1    0  10M  0 part /boot/efi
+xvdf      202:80   0  50G  0 disk
+xvdg      202:96   0  50G  0 disk
+
+sudo yum install mdadm
+
+sudo mdadm --create --verbose /dev/md0 --level=0 --name=MY_RAID --raid-devices=number_of_volumes device_name1 device_name2
+
+sudo mdadm --create --verbose /dev/md0 --level=0 --name=mi-test-raid --raid-devices=2 /dev/xvdf /dev/xvdg
+
+sudo cat /proc/mdstat
+
+Personalities : [raid0]
+md0 : active raid0 xvdg[1] xvdf[0]
+      104790016 blocks super 1.2 512k chunks
+
+sudo mdadm --detail /dev/md0
+
+/dev/md0:
+           Version : 1.2
+     Creation Time : Mon Oct  2 06:54:43 2023
+        Raid Level : raid0
+        Array Size : 104790016 (99.94 GiB 107.30 GB)
+      Raid Devices : 2
+     Total Devices : 2
+       Persistence : Superblock is persistent
+
+       Update Time : Mon Oct  2 06:54:43 2023
+             State : clean
+    Active Devices : 2
+   Working Devices : 2
+    Failed Devices : 0
+     Spare Devices : 0
+
+            Layout : -unknown-
+        Chunk Size : 512K
+
+Consistency Policy : none
+
+              Name : mi-test-raid
+              UUID : 68604f37:0998df4f:79796b55:712071e4
+            Events : 0
+
+    Number   Major   Minor   RaidDevice State
+       0     202       80        0      active sync   /dev/sdf
+       1     202       96        1      active sync   /dev/sdg
+
+
+sudo mkfs.xfs -L MI_RAID /dev/md0
+
+log stripe unit (524288 bytes) is too large (maximum is 256KiB)
+log stripe unit adjusted to 32KiB
+meta-data=/dev/md0               isize=512    agcount=16, agsize=1637248 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1    bigtime=1 inobtcount=1
+data     =                       bsize=4096   blocks=26195968, imaxpct=25
+         =                       sunit=128    swidth=256 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=16384, version=2
+         =                       sectsz=512   sunit=8 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm.conf
+
+ARRAY /dev/md0 metadata=1.2 name=mi-test-raid UUID=68604f37:0998df4f:79796b55:712071e4
+
+sudo dracut -H -f /boot/initramfs-$(uname -r).img $(uname -r)
+
+sudo mkdir -p /mnt/raid
+
+sudo mount LABEL=MI_RAID /mnt/raid
+
+sudo cp /etc/fstab /etc/fstab.orig
+
+vi /etc/fstab
+
+LABEL=MI_RAID       /mnt/raid   xfs    defaults,nofail        0       2
+
+sudo mount -a
+
+Restaurar fstab
+sudo mv /etc/fstab.orig /etc/fstab
+
+sudo fallocate -l 10G /archivogrande
