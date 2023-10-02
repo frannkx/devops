@@ -234,3 +234,130 @@ cd ~ && \
    az group delete --name learn-helm-deploy-aks-rg --yes
 
 
+###################### Implementación de un clúster de Azure Kubernetes Service con Azure CNI ######################
+az login
+
+az group create --location westeurope --name AKSlearn
+
+# Creacion de la red virtual
+az network vnet create \
+    --name AKSVirtualNetwork \
+    --resource-group AKSlearn \
+    --address-prefixes 10.150.0.0/16  \
+    --location westeurope
+
+# Creacion de la subnet
+az network vnet subnet create \
+    --resource-group AKSlearn \
+    --vnet-name AKSVirtualNetwork \
+    --name AKSSubnet \
+    --address-prefixes 10.150.20.0/24
+
+# Creacion de una identidad aministrada
+az identity create \
+    --name AKSIdentity \
+    --resource-group AKSlearn
+
+identityId=$(az identity show \
+    --name AKSIdentity \
+    --resource-group AKSlearn \
+    --query id \
+    --output tsv)
+
+# Se almacena el id de la subnet en una variable
+subnetId=$(az network vnet subnet list \
+    --vnet-name AKSVirtualNetwork \
+    --resource-group AKSlearn \
+    --query "[?name=='AKSSubnet'].id" \
+    --output tsv)
+
+# Creacion del cluster con las variables anteriormente declaradas
+
+az aks create \
+    --name AKSCluster \
+    --resource-group AKSlearn \
+    --location westeurope \
+    --network-plugin azure \
+    --vnet-subnet-id $subnetId \
+    --service-cidr 10.240.0.0/24 \
+    --dns-service-ip 10.240.0.10 \
+    --generate-ssh-keys \
+    --enable-managed-identity \
+    --assign-identity $identityId \
+    --node-vm-size  Standard_F8s_v2 \
+    --node-count 3
+
+# Validar cluster creado
+
+az aks nodepool list \
+    --cluster-name AKSCluster \
+    --resource-group AKSlearn \
+    --output table
+
+# Confirmar uso de direcciones ip
+az network vnet subnet list \
+    --vnet-name AKSVirtualNetwork \
+    --resource-group AKSlearn \
+    --query "[].ipConfigurations.length(@)" \
+    --output table
+
+# Adicion de nodo al cluster 
+az aks scale \
+    --name AKSCluster \
+    --resource-group AKSlearn \
+    --node-count=4
+
+###################### Actualizacion de un cluster AKS ######################
+
+az group create -l westus -n myResourceGroup
+
+az aks get-versions -l westus -o table
+
+KV=1.24.9
+
+az group list -o table 
+RG=myResourceGroup
+
+#Crear cluster aks con las variables declaradas
+CLUSTERNAME=myakscluster
+az aks create -n $CLUSTERNAME -g $RG --kubernetes-version $KV --generate-ssh-keys
+
+# Validar cluster creado
+az aks show -n $CLUSTERNAME -g $RG -o table
+
+# Ver actualizaciones disponibles 
+az aks get-upgrades -n $CLUSTERNAME -g $RG -o table
+
+# Aplicar actualizacion inmediata de version del cluster AKS (--control-plane-only o --node-image-only)
+az aks upgrade -n $CLUSTERNAME -g $RG -k [latest-version]
+
+# Aplicación de actualizaciones de revisiones
+az aks upgrade -n $CLUSTERNAME -g $RG --no-wait -k [next-patch-version]
+az aks wait -g $RG -n $CLUSTERNAME --update
+
+################ Creación de un clúster de AKS con Azure Policy y el complemento Azure Monitor ################
+
+#registrar los proveedores de recursos y las características en versión preliminar
+# Log in first with az login if you're not using Cloud Shell
+# Provider register: Register the Azure Policy provider
+az provider register --namespace Microsoft.PolicyInsights
+
+# Crear un grupo de recursos
+az group create --location eastus --name videogamerg
+
+# Creación de un clúster de AKS con la configuración predeterminada
+az aks create --name videogamecluster --resource-group videogamerg
+
+# Habilitación de directivas de Azure para el clúster
+az aks enable-addons --addons azure-policy --name videogamecluster --resource-group videogamerg
+
+# Implementación de un pod no compatible en el clúster
+
+az aks get-credentials -n videogamecluster -g videogamerg
+
+# Asignar directivas
+https://learn.microsoft.com/es-es/training/modules/aks-governance-azure-policy/5-exercise-assign-policy-to-aks-cluster
+
+
+
+

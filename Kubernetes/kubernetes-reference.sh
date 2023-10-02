@@ -596,6 +596,97 @@ kubectl create secret tls testapi.stackbucks.pe --cert=/home/daruischts/testapi_
 
 #colocar el secreto en el deployment del ingress
 
+################ Creación de un clúster de AKS con Azure Policy y el complemento Azure Monitor ################
+# Ejecute el código siguiente para crear un pod nginx simple desde Docker Hub.
+cat <<EOF | kubectl apply -f -
+ apiVersion: apps/v1
+ kind: Deployment
+ metadata:
+   name: simple-nginx
+   labels:
+     app: nginx
+ spec:
+   selector:
+     matchLabels:
+       app: nginx
+   template:
+     metadata:
+       labels:
+         app: nginx
+     spec:
+       containers:
+       - name: simple-nginx
+         image: docker.io/library/nginx:stable
+         resources:
+           requests:
+             cpu: 100m
+             memory: 100Mi
+           limits:
+             cpu: 120m
+             memory: 120Mi
+         ports:
+         - containerPort: 80
+EOF
+
+
+#Ejecute el código siguiente a fin de implementar el servicio para exponer la implementación.
+
+cat <<EOF | kubectl create -f -
+ apiVersion: v1
+ kind: Service
+ metadata:
+   name: simple-nginx
+   labels:
+     app: nginx
+ spec:
+   type: LoadBalancer
+   ports:
+   - port: 80
+   selector:
+     app: nginx
+EOF
+
+# Validar servicio 
+kubectl get services
+
+## Prueba de Azure Policy
+#comprobar si la asignación de directiva ha tenido efecto
+kubectl get ConstraintTemplates
+
+# Cree otra implementación y servicio de nginx mediante el código siguiente.
+cat <<EOF | kubectl create -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-simple-nginx
+  labels:
+    app: second-nginx
+spec:
+  selector:
+    matchLabels:
+      app: second-nginx
+  template:
+    metadata:
+      labels:
+        app: second-nginx
+    spec:
+      containers:
+      - name: second-simple-nginx
+        image: docker.io/library/nginx:stable
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 120m
+            memory: 120Mi
+        ports:
+        - containerPort: 80
+EOF
+
+# Creación del servicio
+
+
 #Reference:
 # Azure AKS https://learn.microsoft.com/es-mx/azure/aks/
 #Oracle CE https://docs.oracle.com/es-ww/iaas/Content/ContEng/Concepts/contengclustersnodes.htm#processes

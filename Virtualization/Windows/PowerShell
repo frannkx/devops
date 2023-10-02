@@ -1,0 +1,6 @@
+# Cambiar contraseña de usuario local 
+$NewPassword = ConvertTo-SecureString "P@ssw0rd" -AsPlainText -Force
+Set-LocalUser -Name Usuario -Password $NewPassword
+
+# Cambiar contraseña de Administrador Dominio en PowerShell
+Set-ADAccountPassword usuario -NewPassword $NewPassword –Reset
