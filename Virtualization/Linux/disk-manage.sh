@@ -21,4 +21,19 @@ sudo cat /proc/mdstat
 #Build filesystem
 mkfs.[type]
 
+#Build partition
+fdisk /dev/sdx 
+n
+num partition type
+
+#kernel detect changes on partitions table 
+sudo partprobe
+
+
+#repit command every time
+sudo watch -n1 [command]
+
+
+
+
 

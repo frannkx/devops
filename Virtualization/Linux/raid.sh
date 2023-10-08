@@ -25,7 +25,6 @@ Personalities : [raid0]
 md0 : active raid0 xvdg[1] xvdf[0]
       104790016 blocks super 1.2 512k chunks
 
-sudo mdadm --detail /dev/md0
 
 /dev/md0:
            Version : 1.2
@@ -90,16 +89,38 @@ LABEL=MI_RAID       /mnt/raid   xfs    defaults,nofail        0       2
 
 sudo mount -a
 
-Restaurar fstab
+#Restaurar fstab
 sudo mv /etc/fstab.orig /etc/fstab
 
-sudo fallocate -l 10G /archivogrande
+#Create a big file and generate checksum
+sudo fallocate -l 10G bigfile
+sudo md5sum bigfile >> bigfile.md5sum
 
-#Añadir y remover discos del raid
-mdadm --remove /dev/md0 /dev/sdX 
+#Validate integrity of file 
+cksum bigfile
+md5sum archivo
+sha256sum archivo
+
+cksum
+1664382818 32212254720 bigfile
+
+md5sum
+b5622c6c6fc5ab85712dc2a08c9e55d3  bigfile
+
+sha256sum
+977bf5033165994e1d6837b65d66ac29093bfcfb1e49b4b828387b35cc830673  bigfile
+
+
+#Add disk in RAID
+sudo fdisk /dev/sdX #n , primary, linux raid autodetect, w
 mdadm --add /dev/md0 /dev/sdX
 
-Fuente: https://www.enmimaquinafunciona.com/pregunta/21866/recuperar-raid-5-que-ya-funcionaba-en-modo-degradado-perdio-un-segundo-disco
+#Remove disk in RAID
+mdadm --remove /dev/md0 /dev/sdX 
+
+#Testing disk fail and reconstruction
+sudo mdadm --manage --fail /dev/md0 /dev/adX
+sudo mdadm --detail /dev/md0
 
 #References:
 #https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/raid-config.html
@@ -108,4 +129,5 @@ Fuente: https://www.enmimaquinafunciona.com/pregunta/21866/recuperar-raid-5-que-
 #https://www.profesionalreview.com/2019/01/24/tecnologia-raid/
 #https://www.vozidea.com/crear-archivo-grande-en-linux-rapido#:~:text=En%20funci%C3%B3n%20del%20comando%20elegido%2C%20tendr%C3%ADamos%20los%20siguientes,de%201GB%3A%20sudo%20dd%20if%3D%2Fdev%2Fzero%20of%3D%2Farchivogrande%20bs%3D1024%20count%3D1024k
 #https://www.youtube.com/watch?v=I4XskrVF3Xo
+#https://www.enmimaquinafunciona.com/pregunta/21866/recuperar-raid-5-que-ya-funcionaba-en-modo-degradado-perdio-un-segundo-disco
 
