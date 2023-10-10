@@ -116,7 +116,12 @@ sudo fdisk /dev/sdX #n , primary, linux raid autodetect, w
 mdadm --add /dev/md0 /dev/sdX
 
 #Remove disk in RAID
-mdadm --remove /dev/md0 /dev/sdX 
+mdadm /dev/md0 --fail /dev/sdb --remove /dev/sdb
+mdadm --grow /dev/md0 --raid-devices=3
+
+#resize the array
+mdadm --grow /dev/md0 --array-size 19999744
+sudo mdadm --grow /dev/md0 --array-size 104857600
 
 #Testing disk fail and reconstruction
 sudo mdadm --manage --fail /dev/md0 /dev/adX
