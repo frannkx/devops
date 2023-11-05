@@ -35,3 +35,15 @@ sudo cp /home/sammy/easy-rsa/pki/private/server.key /etc/openvpn/server/
 
 # Sign the server certificate request
 scp /home/sammy/easy-rsa/pki/reqs/server.req sammy@your_ca_server_ip:/tmp
+
+#copy the sign files 
+sudo cp /tmp/{server.crt,ca.crt} /etc/openvpn/server
+
+#generate pre-shared secret key
+cd ~/easy-rsa
+openvpn --genkey --secret ta.key
+
+#copy the result 
+sudo cp ta.key /etc/openvpn/server
+
+
