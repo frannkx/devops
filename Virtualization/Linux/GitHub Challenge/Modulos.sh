@@ -96,3 +96,6 @@ code index.html
 git status
 git commit -a -m "Add a heading to index.html"
 
+### Realización de cambios y seguimiento de estos con Git
+
+
