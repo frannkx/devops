@@ -79,3 +79,20 @@ git checkout [HASH] .
 # Documentation: https://git-scm.com/doc
 
 # Automatización del flujo de trabajo con Acciones de GitHub: https://learn.microsoft.com/es-mx/training/paths/automate-workflow-github-actions/
+
+#2# Procedimientos para crear y modificar un proyecto de Git #
+
+## Procedimientos para crear y modificar un proyecto de Git 
+
+### 
+touch index.html
+git status
+git add .
+git status
+git commit index.html -m "Create an empty index.html file"
+git log
+code index.html
+<h1>Our Feline Friends</h1>
+git status
+git commit -a -m "Add a heading to index.html"
+
