@@ -163,6 +163,29 @@ git revert HEAD
 #  quitar la confirmación más reciente con el comando
 git reset --hard HEAD^
 
+# Práctica de recuperación de un archivo eliminado
+rm index.html
+ls
+git checkout -- index.html
+
+# Práctica de la recuperación de un archivo eliminado: git rm
+git rm index.html
+git checkout -- index.html (error)
+git reset HEAD index.html
+git checkout -- index.html
+
+# Reversión de una confirmación
+#se cambia el contenido de index
+
+git commit -m "Purposely overwrite the contents of index.html" index.html
+git log -n1
+
+git checkout -- index.html
+git revert --no-edit HEAD
+
+git log -n1
+
+
 
 
 
