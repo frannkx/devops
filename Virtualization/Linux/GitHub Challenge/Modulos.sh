@@ -98,4 +98,72 @@ git commit -a -m "Add a heading to index.html"
 
 ### Realización de cambios y seguimiento de estos con Git
 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+    <title>Our Feline Friends</title>
+  </head>
+  <body>
+    <h1>Our Feline Friends</h1>
+    <p>Eventually we will put cat pictures here.</p>
+    <hr>
+  </body>
+</html>
+
+git diff
+
+git commit -m "Add HTML boilerplate to index.html" index.html
+
+code .gitignore
+*.bak
+*~
+git add -A
+git commit -m "Make small wording change; ignore editor backups"
+
+### Adición de un subdirectorio
+mkdir CSS
+git status
+
+touch CSS/.git-keep
+git add CSS
+git status
+
+### Reemplazo de un archivo
+rm CSS/.git-keep
+cd CSS
+code site.css
+
+h1, h2, h3, h4, h5, h6 { font-family: sans-serif; }
+body { font-family: serif; }
+
+vi ../index.html
+<link rel="stylesheet" href="CSS/site.css">
+
+### Enumeración de las confirmaciones
+git log
+git log --oneline
+git log -n2
+
+### Corrección de errores simples
+# modificar confirmacion anterior sin cambiar mensaje (no edit)
+git commit --amend --no-edit
+
+# Recuperación de un archivo eliminado: git checkout
+git checkout -- <file_name>
+
+# Recuperación de archivos: git reset
+git reset HEAD index.html
+git checkout -- index.html
+
+# Reversión de una confirmación: git revert (revertir la confirmación anterior.)
+git revert
+git revert HEAD
+
+#  quitar la confirmación más reciente con el comando
+git reset --hard HEAD^
+
+
+
+
 
