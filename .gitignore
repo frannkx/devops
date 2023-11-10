@@ -118,6 +118,9 @@ cdk.out/
 #### Ignore Vagrant Files ####
 # General
 .vagrant/
+.vagrant/*
+.vagrant.d/
+.vagrant.d/*
 
 # Log files (if you are creating logs in debug mode, uncomment this)
 # *.log
