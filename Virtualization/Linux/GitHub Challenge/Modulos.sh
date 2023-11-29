@@ -186,7 +186,5 @@ git revert --no-edit HEAD
 git log -n1
 
 
-
-
-
+## Colaboración con Git 
 
