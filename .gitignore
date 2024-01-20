@@ -64,6 +64,8 @@ terraform.rc
 .cdk.staging/
 cdk.out/
 
+awscliv2.zip
+
 # gitignore template for AWS Serverless Application Model project
 # website: https://docs.aws.amazon.com/serverless-application-model
 
