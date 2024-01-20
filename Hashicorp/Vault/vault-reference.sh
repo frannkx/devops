@@ -14,8 +14,8 @@ vault server -dev
 #Configuraciones en dev
 export VAULT_ADDR='http://127.0.0.1:8200'
 echo "CR3XSzqQbMw15hbbqkQOoqAMxXwB8h9FSgcYdQELhZk=" > unseal.key
-export VAULT_DEV_ROOT_TOKEN_ID=hvs.cY52AWryZSr8iWuqak11HO6W
-
+export VAULT_DEV_ROOT_TOKEN_ID=hvs.QHaaG6F3Uo4PxXRZAVKpsSbX
+export VAULT_TOKEN=hvs.QHaaG6F3Uo4PxXRZAVKpsSbX
 
 vault kv put -mount=secret foo bar=baz
 
@@ -32,8 +32,8 @@ vault kv get -mount=secret hello
 vault kv get -mount=secret -field=excited hello
 
 
-Unseal Key: DrgW7zm4lR/2pRzNaBkTEvIF9dbHAiaVryk94lo45R4=
-Root Token: hvs.IPd8FgA8tz64hKH04a4sKDBB
+Unseal Key: cQPbYDsna90rXKRYd/9KSAUwdQ0SizTtEOLJVrfRUGA=
+Root Token: hvs.QHaaG6F3Uo4PxXRZAVKpsSbX
 
 API
 
@@ -44,10 +44,10 @@ curl -X 'GET' \
   -H 'accept: application/json' \
   -H 'X-Vault-Token: '${V_TOKEN}'' | jq .
 
-  curl -X 'GET' \
-  'http://localhost:8200/v1/sys/mounts' \
-  -H 'accept: application/json' \
-  -H 'X-Vault-Token: '${V_TOKEN}'' | jq -r '.data | keys'
+curl -X 'GET' \
+'http://localhost:8200/v1/sys/mounts' \
+-H 'accept: application/json' \
+-H 'X-Vault-Token: '${V_TOKEN}'' | jq -r '.data | keys'
 
 
 #Reference: 
